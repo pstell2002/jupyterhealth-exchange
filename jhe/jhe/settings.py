@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--4r1=)&2xj1u&sfj7*$jfzdp@*pyr*^n4l*n1p^inne@ulzn1f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 SITE_TITLE = os.getenv('SITE_TITLE')
 SITE_URL = os.getenv('SITE_URL')
@@ -37,13 +37,30 @@ OIDC_CLIENT_AUTHORITY = SITE_URL + os.getenv('OIDC_CLIENT_AUTHORITY_PATH')
 OIDC_CLIENT_ID = os.getenv('OIDC_CLIENT_ID') # TBD: Multi-tenancy lookup based on client entry URI
 OIDC_CLIENT_REDIRECT_URI = SITE_URL + os.getenv('OIDC_CLIENT_REDIRECT_URI_PATH')
 
+
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 ALLOWED_HOSTS = [
+    '20.115.48.58',
+    '127.0.0.1',
     'localhost',
+    'spezi',
+    'ehepilot',
+    'ehepilot.com',
+    'www.ehepilot.com',
     SITE_URL.split('/')[2].split(':')[0]
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
+    'https://20.115.48.58:8000',
+    'https://20.115.48.58',
+    'http://20.115.48.58:8000',
+    'http://20.115.48.58',
+    'https://ehepilot.com',
     SITE_URL
 ]
 
@@ -61,6 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'oauth2_provider',
     'rest_framework',
+    'django_extensions',	
 ]
 
 REST_FRAMEWORK = {
@@ -151,19 +169,20 @@ REGISTRATION_INVITE_CODE = os.getenv('REGISTRATION_INVITE_CODE')
 LOGIN_URL = '/accounts/login/'
 OAUTH2_PROVIDER = {
     "OIDC_ENABLED": True,
+    "ALLOWED_REDIRECT_URI_SCHEMES": ["https", "http", "ehepilot"],
     "OIDC_RSA_PRIVATE_KEY": os.getenv('OIDC_RSA_PRIVATE_KEY'),
     "SCOPES": {
         "openid": "OpenID Connect scope"
-    }
+    },
+    "ACCESS_TOKEN_EXPIRE_SECONDS" : 1209600
 }
-ACCESS_TOKEN_EXPIRE_SECONDS = 1209600 # 2 weeks
 
 PATIENT_AUTHORIZATION_CODE_EXPIRE_SECONDS = 1209600 # 2 weeks
 PATIENT_AUTHORIZATION_CODE_CHALLENGE= os.getenv('PATIENT_AUTHORIZATION_CODE_CHALLENGE')
 PATIENT_AUTHORIZATION_CODE_VERIFIER = os.getenv('PATIENT_AUTHORIZATION_CODE_VERIFIER')
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
-
+#X_FRAME_OPTIONS = "SAMEORIGIN"
+X_FRAME_OPTIONS = 'DENY'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -221,3 +240,4 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+

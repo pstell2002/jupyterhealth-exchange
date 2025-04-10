@@ -23,7 +23,7 @@ class FHIRBase(viewsets.GenericViewSet):
         for entry in bundle_data['entry']:
             if 'value_attachment' not in entry['resource'] or 'data' not in entry['resource']['value_attachment'] or entry['resource']['value_attachment']['data'] is None:
                 raise BadRequest("resource.valueAttachment.data must be not null.")
-        fhir_bundle = Bundle.parse_obj(humps.camelize(request.data))
+        fhir_bundle = Bundle.parse_obj(self.camelize(request.data))
         # then create each record
         response_entries = []
         for entry in request.data['entry']:
@@ -96,7 +96,18 @@ class FHIRBase(viewsets.GenericViewSet):
         if outcome:
             entry['response']['outcome'] = outcome
         return entry
-        
 
-    
-
+    @staticmethod
+    def camelize(data):
+        """Convert dictionary keys from snake_case to camelCase."""
+        if isinstance(data, dict):
+            new_dict = {}
+            for key, value in data.items():
+                parts = key.split("_")
+                camel_key = parts[0] + "".join(word.capitalize() for word in parts[1:])
+                new_dict[camel_key] = FHIRBase.camelize(value)  # Call the static method properly
+            return new_dict
+        elif isinstance(data, list):
+            return [FHIRBase.camelize(item) for item in data]  # Call the static method properly
+        else:
+            return data

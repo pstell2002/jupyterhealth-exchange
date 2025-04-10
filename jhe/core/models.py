@@ -210,6 +210,21 @@ class Patient(models.Model):
     telecom_phone = models.CharField(null=True)
     last_updated = models.DateTimeField(default=timezone.now)
 
+    @staticmethod
+    def camelize(data):
+        """Convert dictionary keys from snake_case to camelCase."""
+        if isinstance(data, dict):
+            new_dict = {}
+            for key, value in data.items():
+                parts = key.split("_")
+                camel_key = parts[0] + "".join(word.capitalize() for word in parts[1:])
+                new_dict[camel_key] = Patient.camelize(value)  # Call the static method properly
+            return new_dict
+        elif isinstance(data, list):
+            return [Patient.camelize(item) for item in data]  # Call the static method properly
+        else:
+            return data
+
     def consolidated_consented_scopes(self):
         q = """
             SELECT DISTINCT(core_codeableconcept.*)
@@ -359,7 +374,7 @@ class Patient(models.Model):
             record.telecom = json.loads(record.telecom)
             serializer = FHIRPatientSerializer(record)
             try:
-                FHIRPatient.parse_obj(humps.camelize(serializer.data))
+                FHIRPatient.parse_obj(Patient.camelize(serializer.data))
             except Exception as e:
                 raise(BadRequest(e)) # TBD: move to view
         
@@ -606,6 +621,21 @@ class Observation(models.Model):
     value_attachment_data = models.JSONField()
     last_updated = models.DateTimeField(auto_now=True)
 
+    @staticmethod
+    def camelize(data):
+        """Convert dictionary keys from snake_case to camelCase."""
+        if isinstance(data, dict):
+            new_dict = {}
+            for key, value in data.items():
+                parts = key.split("_")
+                camel_key = parts[0] + "".join(word.capitalize() for word in parts[1:])
+                new_dict[camel_key] = Observation.camelize(value)  # Call the static method properly
+            return new_dict
+        elif isinstance(data, list):
+            return [Observation.camelize(item) for item in data]  # Call the static method properly
+        else:
+            return data
+
     # https://build.fhir.org/valueset-observation-status.html
     OBSERVATION_STATUS_CHOICES = {
         'registered': 'registered',
@@ -779,7 +809,7 @@ class Observation(models.Model):
             record.value_attachment = json.loads(record.value_attachment)
             serializer = FHIRObservationSerializer(record)
             try:
-                FHIRObservation.parse_obj(humps.camelize(serializer.data))
+                FHIRObservation.parse_obj(Observation.camelize(serializer.data))
             except Exception as e:
                 raise(BadRequest(e)) # TBD: move to view
         
@@ -793,7 +823,7 @@ class Observation(models.Model):
         # Validate Structure
         fhir_observation = None
         try:
-            fhir_observation = FHIRObservation.parse_obj(humps.camelize(data))
+            fhir_observation = FHIRObservation.parse_obj(Observation.camelize(data))
         except Exception as e:
             raise(BadRequest(e)) # TBD: move to view
         

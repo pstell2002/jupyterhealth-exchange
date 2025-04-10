@@ -48,8 +48,9 @@ VALUES
     (50002, 'https://w3id.org/openmhealth', 'omh:blood-pressure:4.0', 'Blood pressure'),
     (50003, 'https://w3id.org/openmhealth', 'omh:body-temperature:3.0', 'Body temperature'),
     (50004, 'https://w3id.org/openmhealth', 'omh:oxygen-saturation:2.0', 'Oxygen saturation'),
-    (50005, 'https://w3id.org/openmhealth', 'omh:heart-rate:2.0', 'Heart Rate');
-ALTER SEQUENCE core_codeableconcept_id_seq RESTART WITH 50005;
+    (50005, 'https://w3id.org/openmhealth', 'omh:heart-rate:2.0', 'Heart Rate'),
+    (50006, 'https://w3id.org/openmhealth', 'omh:geoposition:1.0', 'Geoposition');
+ALTER SEQUENCE core_codeableconcept_id_seq RESTART WITH 50007;
 
 
 -- OBSERVATIONS

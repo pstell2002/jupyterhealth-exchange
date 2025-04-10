@@ -9,9 +9,9 @@ OIDC_CLIENT_ID=Abc123
 
 CH_INVITATION_LINK_PREFIX="https://play.google.com/store/apps/details?id=org.thecommonsproject.android.phr.dev&referrer=cloud_sharing_code="
 
-DB_NAME=jhe_dev
-DB_USER=jheuser
-DB_PASSWORD=jhepassword
+DB_NAME=spezi_db
+DB_USER=speziuser
+DB_PASSWORD=speziuser
 DB_HOST=localhost
 # Use host.docker.internal if connecting to localhost from Docker
 DB_PORT=5432
