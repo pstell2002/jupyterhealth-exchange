@@ -1,3 +1,8 @@
+This project is a deployment of JupyterHealth Exchange (JHE) on an Azure VM, then connecting the JHE instance to a JupyterHub instance deployed on the same VM.
+
+The documentation followed for JHE installation is here: https://github.com/the-commons-project/jupyterhealth-exchange/tree/main
+However, some changes were made to the steps to accomodate the different setup stesp required to launch the project on an VM, which are stated bloew: 
+
 # JHE-Setup
 JHE setup
 ## Deploying on Local Machine
